@@ -67,10 +67,13 @@ def create_feature_branch(description, date_str=None):
         print('错误: 当前目录不是 git 仓库')
         sys.exit(1)
     
-    # 获取远程名称
+    # 获取远程名称，优先使用 origin
     result = run_command('git remote', check=False)
-    remotes = result.stdout.strip().split('\n') if result.stdout else []
-    remote = remotes[0] if remotes else 'origin'
+    remotes = result.stdout.strip().split('\n') if result.stdout.strip() else []
+    if 'origin' in remotes:
+        remote = 'origin'
+    else:
+        remote = remotes[0] if remotes else 'origin'
     
     # 检查 release 分支是否存在
     result = run_command('git branch -a', check=False)
